@@ -8,7 +8,8 @@ PKG_LICENSE_FILES:=
 
 PKG_SOURCE_URL:=https://github.com/lwfinger/rtw88
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_VERSION:=764a1ee307d7e5720a93b8139c94d76737eced91
+PKG_SOURCE_DATE:=2024-10-31
+PKG_SOURCE_VERSION:=2c873db6cb3aae3a8c7ffe5638549d44a0cadb57
 
 # PKG_MAINTAINER:=
 PKG_BUILD_PARALLEL:=1
@@ -39,6 +40,7 @@ define KernelPackage/rtw88-usb
   FILES:=\
 	$(PKG_BUILD_DIR)/rtw_usb.ko \
 	$(PKG_BUILD_DIR)/rtw_core.ko \
+	$(PKG_BUILD_DIR)/rtw_88xxa.ko \
 	$(PKG_BUILD_DIR)/rtw_8822cu.ko \
 	$(PKG_BUILD_DIR)/rtw_8822c.ko \
 	$(PKG_BUILD_DIR)/rtw_8822b.ko \
@@ -47,6 +49,7 @@ define KernelPackage/rtw88-usb
 	$(PKG_BUILD_DIR)/rtw_8821cu.ko \
 	$(PKG_BUILD_DIR)/rtw_8821a.ko \
 	$(PKG_BUILD_DIR)/rtw_8821au.ko \
+	$(PKG_BUILD_DIR)/rtw_8812a.ko \
 	$(PKG_BUILD_DIR)/rtw_8812au.ko \
 	$(PKG_BUILD_DIR)/rtw_8723d.ko \
 	$(PKG_BUILD_DIR)/rtw_8723x.ko \
