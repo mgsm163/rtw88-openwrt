@@ -378,7 +378,7 @@ index 8b58d00..fe763af 100644
  /**
   * abs_diff - return absolute value of the difference between the arguments
 diff --git a/pci.c b/pci.c
-index e6bb7a2..84ededc 100644
+index 6545f3d..24e21ba 100644
 --- a/pci.c
 +++ b/pci.c
 @@ -1706,7 +1706,7 @@ static int rtw_pci_napi_init(struct rtw_dev *rtwdev)
@@ -404,7 +404,7 @@ index c6360cf..1392529 100644
  		rtwdev->ps_enabled = true;
  	} else {
 diff --git a/tx.c b/tx.c
-index a5adcd6..6527c3a 100644
+index 27a5613..7a161d2 100644
 --- a/tx.c
 +++ b/tx.c
 @@ -95,7 +95,7 @@ EXPORT_SYMBOL(rtw_tx_fill_tx_desc);
@@ -443,7 +443,7 @@ index a5adcd6..6527c3a 100644
  	tx_mcs_map = le16_to_cpu(sta->deflink.vht_cap.vht_mcs.tx_mcs_map);
  #else
  	tx_mcs_map = le16_to_cpu(sta->vht_cap.vht_mcs.tx_mcs_map);
-@@ -387,7 +387,7 @@ static void rtw_tx_data_pkt_info_update(struct rtw_dev *rtwdev,
+@@ -400,7 +400,7 @@ static void rtw_tx_data_pkt_info_update(struct rtw_dev *rtwdev,
  	if (info->control.use_rts || skb->len > hw->wiphy->rts_threshold)
  		pkt_info->rts = true;
  
@@ -453,7 +453,7 @@ index a5adcd6..6527c3a 100644
  		rate = get_highest_vht_tx_rate(rtwdev, sta);
  	else if (sta->deflink.ht_cap.ht_supported)
 diff --git a/usb.c b/usb.c
-index 33d637c..ac5f7ee 100644
+index 3a85fad..43321ec 100644
 --- a/usb.c
 +++ b/usb.c
 @@ -615,28 +615,42 @@ static void rtw_usb_rx_handler(struct work_struct *work)
