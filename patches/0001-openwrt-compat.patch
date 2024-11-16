@@ -21,7 +21,7 @@ index 95de3d3..838c627 100644
  #else
  		bfee->aid = bss_conf->aid;
 diff --git a/fw.c b/fw.c
-index 0a41522..4ac1c3d 100644
+index 72c7f5a..450554e 100644
 --- a/fw.c
 +++ b/fw.c
 @@ -196,7 +196,7 @@ legacy:
@@ -33,7 +33,7 @@ index 0a41522..4ac1c3d 100644
  	sta->deflink.agg.max_rc_amsdu_len = get_max_amsdu_len(bit_rate);
  #else
  	sta->max_rc_amsdu_len = get_max_amsdu_len(bit_rate);
-@@ -735,7 +735,7 @@ void rtw_fw_send_rssi_info(struct rtw_dev *rtwdev, struct rtw_sta_info *si)
+@@ -734,7 +734,7 @@ void rtw_fw_send_rssi_info(struct rtw_dev *rtwdev, struct rtw_sta_info *si)
  	rtw_fw_send_h2c_command(rtwdev, h2c_pkt);
  }
  
@@ -42,7 +42,7 @@ index 0a41522..4ac1c3d 100644
  void rtw_fw_send_ra_info(struct rtw_dev *rtwdev, struct rtw_sta_info *si,
  			 bool reset_ra_mask)
  #else
-@@ -744,7 +744,7 @@ void rtw_fw_send_ra_info(struct rtw_dev *rtwdev, struct rtw_sta_info *si)
+@@ -743,7 +743,7 @@ void rtw_fw_send_ra_info(struct rtw_dev *rtwdev, struct rtw_sta_info *si)
  {
  	u8 h2c_pkt[H2C_PKT_SIZE] = {0};
  	bool disable_pt = true;
@@ -51,7 +51,7 @@ index 0a41522..4ac1c3d 100644
  	bool reset_ra_mask = true;
  #endif
  
-@@ -1243,7 +1243,7 @@ static struct sk_buff *rtw_get_rsvd_page_skb(struct ieee80211_hw *hw,
+@@ -1242,7 +1242,7 @@ static struct sk_buff *rtw_get_rsvd_page_skb(struct ieee80211_hw *hw,
  
  	switch (rsvd_pkt->type) {
  	case RSVD_BEACON:
@@ -60,7 +60,7 @@ index 0a41522..4ac1c3d 100644
  		skb_new = ieee80211_beacon_get_tim(hw, vif, &tim_offset, NULL, 0);
  #else
  		skb_new = ieee80211_beacon_get_tim(hw, vif, &tim_offset, NULL);
-@@ -1258,7 +1258,7 @@ static struct sk_buff *rtw_get_rsvd_page_skb(struct ieee80211_hw *hw,
+@@ -1257,7 +1257,7 @@ static struct sk_buff *rtw_get_rsvd_page_skb(struct ieee80211_hw *hw,
  		break;
  	case RSVD_NULL:
  #if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 14, 17)
@@ -69,7 +69,7 @@ index 0a41522..4ac1c3d 100644
  		skb_new = ieee80211_nullfunc_get(hw, vif, -1, false);
  #else
  		skb_new = ieee80211_nullfunc_get(hw, vif, false);
-@@ -1269,7 +1269,7 @@ static struct sk_buff *rtw_get_rsvd_page_skb(struct ieee80211_hw *hw,
+@@ -1268,7 +1268,7 @@ static struct sk_buff *rtw_get_rsvd_page_skb(struct ieee80211_hw *hw,
  		break;
  	case RSVD_QOS_NULL:
  #if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 14, 17)
@@ -150,7 +150,7 @@ index 5a1d67d..630dc4b 100644
  #else
  			   u16 ac,
 diff --git a/main.c b/main.c
-index eb3b42a..760b364 100644
+index fdab0a1..302b393 100644
 --- a/main.c
 +++ b/main.c
 @@ -193,7 +193,7 @@ static void rtw_vif_watch_dog_iter(void *data, struct ieee80211_vif *vif)
@@ -355,7 +355,7 @@ index eb3b42a..760b364 100644
  		ieee80211_request_smps(vif, 0, IEEE80211_SMPS_OFF);
  #else
  		ieee80211_request_smps(vif, IEEE80211_SMPS_OFF);
-@@ -2545,7 +2545,7 @@ static void rtw_check_sta_active_iter(void *data, struct ieee80211_vif *vif)
+@@ -2632,7 +2632,7 @@ static void rtw_check_sta_active_iter(void *data, struct ieee80211_vif *vif)
  	if (vif->type != NL80211_IFTYPE_STATION)
  		return;
  
@@ -365,20 +365,21 @@ index eb3b42a..760b364 100644
  #else
  	if (vif->bss_conf.assoc || !is_zero_ether_addr(rtwvif->bssid))
 diff --git a/main.h b/main.h
-index 8b58d00..fe763af 100644
+index 2f6de49..e77cecd 100644
 --- a/main.h
 +++ b/main.h
-@@ -33,6 +33,8 @@
+@@ -33,6 +33,9 @@
  #define RHEL_RELEASE_VERSION(a, b) a<<8 & b
  #endif
  
 +#define OPENWRT
++#define CONFIG_MAC80211_LEDS
 +
  #if (LINUX_VERSION_CODE < KERNEL_VERSION(6, 6, 0))
  /**
   * abs_diff - return absolute value of the difference between the arguments
 diff --git a/pci.c b/pci.c
-index 6545f3d..24e21ba 100644
+index e6bb7a2..84ededc 100644
 --- a/pci.c
 +++ b/pci.c
 @@ -1706,7 +1706,7 @@ static int rtw_pci_napi_init(struct rtw_dev *rtwdev)
@@ -404,7 +405,7 @@ index c6360cf..1392529 100644
  		rtwdev->ps_enabled = true;
  	} else {
 diff --git a/tx.c b/tx.c
-index 27a5613..7a161d2 100644
+index a56c06e..07eb7a2 100644
 --- a/tx.c
 +++ b/tx.c
 @@ -95,7 +95,7 @@ EXPORT_SYMBOL(rtw_tx_fill_tx_desc);
@@ -443,7 +444,7 @@ index 27a5613..7a161d2 100644
  	tx_mcs_map = le16_to_cpu(sta->deflink.vht_cap.vht_mcs.tx_mcs_map);
  #else
  	tx_mcs_map = le16_to_cpu(sta->vht_cap.vht_mcs.tx_mcs_map);
-@@ -400,7 +400,7 @@ static void rtw_tx_data_pkt_info_update(struct rtw_dev *rtwdev,
+@@ -387,7 +387,7 @@ static void rtw_tx_data_pkt_info_update(struct rtw_dev *rtwdev,
  	if (info->control.use_rts || skb->len > hw->wiphy->rts_threshold)
  		pkt_info->rts = true;
  

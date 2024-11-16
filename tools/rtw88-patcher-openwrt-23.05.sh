@@ -37,7 +37,7 @@ patch_rtw88_main_h() {
     # Check if the '#define OPENWRT' line is already present
     if ! grep -q "#define OPENWRT" "$file"; then
       sed -i '36i\
-#define OPENWRT\n' "$file"
+#define OPENWRT\n#define CONFIG_MAC80211_LEDS\n' "$file"
 
       echo "Patched $file with '#define OPENWRT'"
     else

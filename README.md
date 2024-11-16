@@ -6,15 +6,15 @@ With this repo, you can build ready-to-use modules with the latest fixes for you
 ![8821AU](docs/8821au.jpg)
 
 ## Support
-- RTW8812AU
-- RTW8821AU
-- RTW8811AU
-- RTW8822BU
-- RTW8812BU
-- RTW8822CU
-- RTW8821CU
-- RTW8811CU
-- RTW8723DU
+- RTL8812AU
+- RTL8821AU
+- RTL8811AU
+- RTL8822BU
+- RTL8812BU
+- RTL8822CU
+- RTL8821CU
+- RTL8811CU
+- RTL8723DU
 
 **Currently I've tested this only on 23.05.**
 
@@ -24,11 +24,11 @@ Thanks to henkv1 for the original repo: https://github.com/henkv1/rtw88-usb-open
 ## How to Use
 ### Build the modules using the premade patch
 
-- Download the SDK for your device
+- Download the SDK for your device if you are following the official OpenWrt stable builds, like 23.05.5. Download the OpenWrt source code from git otherwise.
 - Update the package feeds: ./scripts/feeds update -a ; ./scripts/feeds install -a (see: https://openwrt.org/docs/guide-developer/toolchain/using_the_sdk for information on using the SDK)
 - Run make menuconfig.
 - Clone this repository in package/kernel/rtw88.
-- Compile the package: make package/rtw88-usb/compile
+- (For SDK) Compile the package: make package/rtw88-usb/compile
 
 The firmware package is named rtw88-firmware* and you can find it in the bin/packages/*architecture*/base/ directory. 
 The kernel module package is named kmod-rtw88-usb_* and you can find it in the bin/target/*architecture*/*model*/packages/ directory. You can copy both packages to your device and install it using opkg install *package*. 
