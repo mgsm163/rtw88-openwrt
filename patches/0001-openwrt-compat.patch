@@ -365,23 +365,31 @@ index fdab0a1..302b393 100644
  #else
  	if (vif->bss_conf.assoc || !is_zero_ether_addr(rtwvif->bssid))
 diff --git a/main.h b/main.h
-index 2f6de49..e77cecd 100644
+index 5d7120b..022d732 100644
 --- a/main.h
 +++ b/main.h
-@@ -33,6 +33,9 @@
+@@ -36,6 +36,8 @@
  #define RHEL_RELEASE_VERSION(a, b) a<<8 & b
  #endif
  
 +#define OPENWRT
-+#define CONFIG_MAC80211_LEDS
 +
  #if (LINUX_VERSION_CODE < KERNEL_VERSION(6, 6, 0))
  /**
   * abs_diff - return absolute value of the difference between the arguments
 diff --git a/pci.c b/pci.c
-index e6bb7a2..84ededc 100644
+index e6bb7a2..24e21ba 100644
 --- a/pci.c
 +++ b/pci.c
+@@ -993,7 +993,7 @@ static void rtw_pci_tx_isr(struct rtw_dev *rtwdev, struct rtw_pci *rtwpci,
+ 		info = IEEE80211_SKB_CB(skb);
+ 
+ 		/* enqueue to wait for tx report */
+-		if (info->flags & IEEE80211_TX_CTL_REQ_TX_STATUS) {
++		if (rtw_tx_report_needed(rtwdev, skb)) {
+ 			rtw_tx_report_enqueue(rtwdev, skb, tx_data->sn);
+ 			continue;
+ 		}
 @@ -1706,7 +1706,7 @@ static int rtw_pci_napi_init(struct rtw_dev *rtwdev)
  #endif
  		, &rtwpci->napi
@@ -404,8 +412,21 @@ index c6360cf..1392529 100644
  	if (data.count == 1 && data.found_vif->cfg.ps) {
  		rtwdev->ps_enabled = true;
  	} else {
+diff --git a/sdio.c b/sdio.c
+index 7b053db..e0508e0 100644
+--- a/sdio.c
++++ b/sdio.c
+@@ -1193,7 +1193,7 @@ static void rtw_sdio_indicate_tx_status(struct rtw_dev *rtwdev,
+ 	struct ieee80211_hw *hw = rtwdev->hw;
+ 
+ 	/* enqueue to wait for tx report */
+-	if (info->flags & IEEE80211_TX_CTL_REQ_TX_STATUS) {
++	if (rtw_tx_report_needed(rtwdev, skb)) {
+ 		rtw_tx_report_enqueue(rtwdev, skb, tx_data->sn);
+ 		return;
+ 	}
 diff --git a/tx.c b/tx.c
-index a56c06e..07eb7a2 100644
+index a56c06e..95effd8 100644
 --- a/tx.c
 +++ b/tx.c
 @@ -95,7 +95,7 @@ EXPORT_SYMBOL(rtw_tx_fill_tx_desc);
@@ -444,7 +465,27 @@ index a56c06e..07eb7a2 100644
  	tx_mcs_map = le16_to_cpu(sta->deflink.vht_cap.vht_mcs.tx_mcs_map);
  #else
  	tx_mcs_map = le16_to_cpu(sta->vht_cap.vht_mcs.tx_mcs_map);
-@@ -387,7 +387,7 @@ static void rtw_tx_data_pkt_info_update(struct rtw_dev *rtwdev,
+@@ -216,6 +216,19 @@ void rtw_tx_report_purge_timer(void *cntx)
+ 	spin_unlock_irqrestore(&tx_report->q_lock, flags);
+ }
+ 
++bool rtw_tx_report_needed(struct rtw_dev *rtwdev, struct sk_buff *skb)
++{
++	struct ieee80211_hdr *hdr = (struct ieee80211_hdr *)skb->data;
++	struct ieee80211_tx_info *info = IEEE80211_SKB_CB(skb);
++
++	if (test_bit(RTW_FLAG_SCANNING, rtwdev->flags) &&
++	    ieee80211_is_any_nullfunc(hdr->frame_control))
++		return false;
++
++	return !!(info->flags & IEEE80211_TX_CTL_REQ_TX_STATUS);
++}
++EXPORT_SYMBOL(rtw_tx_report_needed);
++
+ void rtw_tx_report_enqueue(struct rtw_dev *rtwdev, struct sk_buff *skb, u8 sn)
+ {
+ 	struct rtw_tx_report *tx_report = &rtwdev->tx_report;
+@@ -387,7 +400,7 @@ static void rtw_tx_data_pkt_info_update(struct rtw_dev *rtwdev,
  	if (info->control.use_rts || skb->len > hw->wiphy->rts_threshold)
  		pkt_info->rts = true;
  
@@ -453,3 +494,37 @@ index a56c06e..07eb7a2 100644
  	if (sta->deflink.vht_cap.vht_supported)
  		rate = get_highest_vht_tx_rate(rtwdev, sta);
  	else if (sta->deflink.ht_cap.ht_supported)
+@@ -463,7 +476,7 @@ void rtw_tx_pkt_info_update(struct rtw_dev *rtwdev,
+ 	bmc = is_broadcast_ether_addr(hdr->addr1) ||
+ 	      is_multicast_ether_addr(hdr->addr1);
+ 
+-	if (info->flags & IEEE80211_TX_CTL_REQ_TX_STATUS)
++	if (rtw_tx_report_needed(rtwdev, skb))
+ 		rtw_tx_report_enable(rtwdev, pkt_info);
+ 
+ 	pkt_info->bmc = bmc;
+diff --git a/tx.h b/tx.h
+index d34cdec..978b006 100644
+--- a/tx.h
++++ b/tx.h
+@@ -97,6 +97,7 @@ void rtw_tx_pkt_info_update(struct rtw_dev *rtwdev,
+ 			    struct sk_buff *skb);
+ void rtw_tx_fill_tx_desc(struct rtw_dev *rtwdev,
+ 			 struct rtw_tx_pkt_info *pkt_info, struct sk_buff *skb);
++bool rtw_tx_report_needed(struct rtw_dev *rtwdev, struct sk_buff *skb);
+ void rtw_tx_report_enqueue(struct rtw_dev *rtwdev, struct sk_buff *skb, u8 sn);
+ void rtw_tx_report_handle(struct rtw_dev *rtwdev, struct sk_buff *skb, int src);
+ void rtw_tx_rsvd_page_pkt_info_update(struct rtw_dev *rtwdev,
+diff --git a/usb.c b/usb.c
+index 9dafc75..89b3722 100644
+--- a/usb.c
++++ b/usb.c
+@@ -281,7 +281,7 @@ static void rtw_usb_write_port_tx_complete(struct urb *urb)
+ 		skb_pull(skb, rtwdev->chip->tx_pkt_desc_sz);
+ 
+ 		/* enqueue to wait for tx report */
+-		if (info->flags & IEEE80211_TX_CTL_REQ_TX_STATUS) {
++		if (rtw_tx_report_needed(rtwdev, skb)) {
+ 			rtw_tx_report_enqueue(rtwdev, skb, tx_data->sn);
+ 			continue;
+ 		}
