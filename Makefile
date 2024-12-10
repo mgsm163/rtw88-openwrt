@@ -65,7 +65,8 @@ NOSTDINC_FLAGS = \
 	-I$(STAGING_DIR)/usr/include/mac80211 \
 	-I$(STAGING_DIR)/usr/include/mac80211/uapi \
 	-include backport/autoconf.h \
-	-include backport/backport.h
+	-include backport/backport.h \
+	-Wno-error=cast-function-type
 
 EXTRA_CFLAGS:= \
 	-DRTW_SINGLE_WIPHY \
