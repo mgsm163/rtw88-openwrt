@@ -1,5 +1,5 @@
 # rtw88-openwrt 🚀
-Package and tools for [Linux rtw88](https://github.com/lwfinger/rtw88) driver for OpenWrt.
+Package and tools for [Linux rtw88](https://github.com/lwfinger/rtw88) driver for OpenWrt 23.05 and 24.10.
 
 With this repo, you can build ready-to-use modules with the latest fixes for your router. You can test patches from rtw88 devs too :)
 
@@ -16,8 +16,6 @@ With this repo, you can build ready-to-use modules with the latest fixes for you
 - RTL8811CU
 - RTL8723DU
 
-Currently I've tested this only on **23.05** stable releases. When the 24.10 and SNAPSHOT+apk situation stabilizes, I will check if I can add their patch generators. PRs are welcome too :)
-
 ## Thanks
 Thanks to henkv1 for the original repo: https://github.com/henkv1/rtw88-usb-openwrt/
 
@@ -28,6 +26,7 @@ Thanks to henkv1 for the original repo: https://github.com/henkv1/rtw88-usb-open
 - Update the package feeds: ./scripts/feeds update -a ; ./scripts/feeds install -a (see: https://openwrt.org/docs/guide-developer/toolchain/using_the_sdk for information on using the SDK)
 - Run make menuconfig.
 - Clone this repository on the folder package/kernel/rtw88.
+- There are two patches: for 23.05 and 24.10. Delete the file that you won't need.
 - (For SDK) Compile the package: make package/rtw88-usb/compile
 
 The firmware package is named rtw88-firmware{...} and you can find it in the bin/packages/{architecture}/base/ directory. 
@@ -41,11 +40,11 @@ rtw88 is not directly compatible with OpenWrt. This is because OpenWrt uses a hy
 
 You can generate your own patch if the rtw88 repo has been updated, or you want to test or revert some code and the provided patch does not work anymore.
 
-This only work for OpenWrt 23.05 target devices.
+This only work for OpenWrt 23.05 and 24.10 target devices.
 
 - Clone the original rtw88 repo.
 - Optionally update the code or apply all patches do you want.
-- From this repo, execute `tools/rtw88-patcher-openwrt-23.05.sh` inside the rtw88 tree.
+- From this repo, execute `tools/rtw88-patcher-openwrt-23.05.sh` or `tools/rtw88-patcher-openwrt-24.10.sh` inside the rtw88 tree.
 - Generate a patch file with `git diff > rtw88-openwrt.patch` inside the rtw88 tree.
 - Put the `rtw88-openwrt.patch` in the folder "patches", on a local copy of this repo.
 
