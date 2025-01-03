@@ -1,6 +1,6 @@
 include $(TOPDIR)/rules.mk
 
-PKG_NAME:=rtw88-usb
+PKG_NAME:=rtw88-backports-usb
 PKG_RELEASE:=1
 
 PKG_LICENSE:=GPLv2
@@ -19,7 +19,7 @@ STAMP_CONFIGURED_DEPENDS := $(STAGING_DIR)/usr/include/mac80211-backport/backpor
 include $(INCLUDE_DIR)/kernel.mk
 include $(INCLUDE_DIR)/package.mk
 
-define Package/rtw88-firmware
+define Package/rtw88-backports-firmware
   TITLE:= RealTek rtw88 firmware files
   SECTION:=firmware
   CATEGORY:=Firmware
@@ -33,10 +33,10 @@ RTW_AUTOLOAD := rtw_8821cu \
 		rtw_8821au \
 		rtw_8723du
 
-define KernelPackage/rtw88-usb
+define KernelPackage/rtw88-backports-usb
   SUBMENU:=Wireless Drivers
   TITLE:= Realtek RTL8822CU AP Mode
-  DEPENDS:=+kmod-cfg80211 +kmod-mac80211 +kmod-usb-core +@DRIVER_11N_SUPPORT +@DRIVER_11AC_SUPPORT +@PCI_SUPPORT +rtw88-firmware
+  DEPENDS:=+kmod-cfg80211 +kmod-mac80211 +kmod-usb-core +@DRIVER_11N_SUPPORT +@DRIVER_11AC_SUPPORT +@PCI_SUPPORT +rtw88-backports-firmware
   FILES:=\
 	$(PKG_BUILD_DIR)/rtw_usb.ko \
 	$(PKG_BUILD_DIR)/rtw_core.ko \
@@ -76,8 +76,8 @@ EXTRA_CFLAGS:= \
 	-DBUILD_OPENWRT
 
 EXTRA_KCONFIG:= \
-	CONFIG_RTW88-USB=m \
-	USER_MODULE_NAME=rtw88-usb
+	CONFIG_RTW88-BACKPORTS-USB=m \
+	USER_MODULE_NAME=rtw88-backports-usb
 
 MAKE_OPTS:= \
 	$(KERNEL_MAKE_FLAGS) \
@@ -92,12 +92,12 @@ define Build/Compile
 		modules
 endef
 
-define Package/rtw88-firmware/install
+define Package/rtw88-backports-firmware/install
 	$(INSTALL_DIR) $(1)/lib/firmware/rtw88
 	$(INSTALL_DATA) \
 		$(PKG_BUILD_DIR)/firmware/* \
 		$(1)/lib/firmware/rtw88/
 endef
 
-$(eval $(call KernelPackage,rtw88-usb))
-$(eval $(call BuildPackage,rtw88-firmware))
+$(eval $(call KernelPackage,rtw88-backports-usb))
+$(eval $(call BuildPackage,rtw88-backports-firmware))
