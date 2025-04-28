@@ -21,7 +21,7 @@ index 95de3d3..838c627 100644
  #else
  		bfee->aid = bss_conf->aid;
 diff --git a/fw.c b/fw.c
-index 2c760e3..71bbadb 100644
+index c3d021b..ec4e214 100644
 --- a/fw.c
 +++ b/fw.c
 @@ -196,7 +196,7 @@ legacy:
@@ -51,7 +51,7 @@ index 2c760e3..71bbadb 100644
  	bool reset_ra_mask = true;
  #endif
  
-@@ -1256,7 +1256,7 @@ static struct sk_buff *rtw_get_rsvd_page_skb(struct ieee80211_hw *hw,
+@@ -1257,7 +1257,7 @@ static struct sk_buff *rtw_get_rsvd_page_skb(struct ieee80211_hw *hw,
  
  	switch (rsvd_pkt->type) {
  	case RSVD_BEACON:
@@ -60,7 +60,7 @@ index 2c760e3..71bbadb 100644
  		skb_new = ieee80211_beacon_get_tim(hw, vif, &tim_offset, NULL, 0);
  #else
  		skb_new = ieee80211_beacon_get_tim(hw, vif, &tim_offset, NULL);
-@@ -1271,7 +1271,7 @@ static struct sk_buff *rtw_get_rsvd_page_skb(struct ieee80211_hw *hw,
+@@ -1272,7 +1272,7 @@ static struct sk_buff *rtw_get_rsvd_page_skb(struct ieee80211_hw *hw,
  		break;
  	case RSVD_NULL:
  #if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 14, 17)
@@ -69,7 +69,7 @@ index 2c760e3..71bbadb 100644
  		skb_new = ieee80211_nullfunc_get(hw, vif, -1, false);
  #else
  		skb_new = ieee80211_nullfunc_get(hw, vif, false);
-@@ -1282,7 +1282,7 @@ static struct sk_buff *rtw_get_rsvd_page_skb(struct ieee80211_hw *hw,
+@@ -1283,7 +1283,7 @@ static struct sk_buff *rtw_get_rsvd_page_skb(struct ieee80211_hw *hw,
  		break;
  	case RSVD_QOS_NULL:
  #if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 14, 17)
@@ -79,10 +79,10 @@ index 2c760e3..71bbadb 100644
  #else
  		skb_new = ieee80211_nullfunc_get(hw, vif, true);
 diff --git a/fw.h b/fw.h
-index 6215edc..5dfdbaf 100644
+index 54035ed..94440bb 100644
 --- a/fw.h
 +++ b/fw.h
-@@ -847,7 +847,7 @@ void rtw_fw_coex_query_hid_info(struct rtw_dev *rtwdev, u8 sub_id, u8 data);
+@@ -846,7 +846,7 @@ void rtw_fw_coex_query_hid_info(struct rtw_dev *rtwdev, u8 sub_id, u8 data);
  
  void rtw_fw_bt_wifi_control(struct rtw_dev *rtwdev, u8 op_code, u8 *data);
  void rtw_fw_send_rssi_info(struct rtw_dev *rtwdev, struct rtw_sta_info *si);
@@ -150,10 +150,10 @@ index f7c6e0a..dd29a1a 100644
  #else
  			   u16 ac,
 diff --git a/main.c b/main.c
-index 09a3bd9..b78094b 100644
+index 94c304c..0520e6b 100644
 --- a/main.c
 +++ b/main.c
-@@ -193,7 +193,7 @@ static void rtw_vif_watch_dog_iter(void *data, struct ieee80211_vif *vif)
+@@ -194,7 +194,7 @@ static void rtw_vif_watch_dog_iter(void *data, struct ieee80211_vif *vif)
  	struct rtw_vif *rtwvif = (struct rtw_vif *)vif->drv_priv;
  
  	if (vif->type == NL80211_IFTYPE_STATION)
@@ -162,7 +162,7 @@ index 09a3bd9..b78094b 100644
  		if (vif->cfg.assoc)
  #else
  		if (vif->bss_conf.assoc)
-@@ -587,7 +587,7 @@ EXPORT_SYMBOL(rtw_dump_reg);
+@@ -588,7 +588,7 @@ EXPORT_SYMBOL(rtw_dump_reg);
  void rtw_vif_assoc_changed(struct rtw_vif *rtwvif,
  			   struct ieee80211_bss_conf *conf)
  {
@@ -171,7 +171,7 @@ index 09a3bd9..b78094b 100644
  	struct ieee80211_vif *vif = NULL;
  
  	if (conf)
-@@ -1017,7 +1017,7 @@ static void rtw_hw_config_rf_ant_num(struct rtw_dev *rtwdev, u8 hw_ant_num)
+@@ -1018,7 +1018,7 @@ static void rtw_hw_config_rf_ant_num(struct rtw_dev *rtwdev, u8 hw_ant_num)
  static u64 get_vht_ra_mask(struct ieee80211_sta *sta)
  {
  	u64 ra_mask = 0;
@@ -180,7 +180,7 @@ index 09a3bd9..b78094b 100644
  	u16 mcs_map = le16_to_cpu(sta->deflink.vht_cap.vht_mcs.rx_mcs_map);
  #else
  	u16 mcs_map = le16_to_cpu(sta->vht_cap.vht_mcs.rx_mcs_map);
-@@ -1240,26 +1240,26 @@ void rtw_update_sta_info(struct rtw_dev *rtwdev, struct rtw_sta_info *si,
+@@ -1241,26 +1241,26 @@ void rtw_update_sta_info(struct rtw_dev *rtwdev, struct rtw_sta_info *si,
  	bool is_vht_enable = false;
  	bool is_support_sgi = false;
  
@@ -211,7 +211,7 @@ index 09a3bd9..b78094b 100644
  	} else if (sta->deflink.ht_cap.ht_supported) {
  		ra_mask |= ((u64)sta->deflink.ht_cap.mcs.rx_mask[3] << 36) |
  			   ((u64)sta->deflink.ht_cap.mcs.rx_mask[2] << 28) |
-@@ -1289,20 +1289,20 @@ void rtw_update_sta_info(struct rtw_dev *rtwdev, struct rtw_sta_info *si,
+@@ -1290,20 +1290,20 @@ void rtw_update_sta_info(struct rtw_dev *rtwdev, struct rtw_sta_info *si,
  			   RA_MASK_VHT_RATES_1SS | RA_MASK_HT_RATES_1SS;
  
  	if (hal->current_band_type == RTW_BAND_5G) {
@@ -235,7 +235,7 @@ index 09a3bd9..b78094b 100644
  		} else if (sta->deflink.ht_cap.ht_supported) {
  #else
  		} else if (sta->ht_cap.ht_supported) {
-@@ -1314,13 +1314,13 @@ void rtw_update_sta_info(struct rtw_dev *rtwdev, struct rtw_sta_info *si,
+@@ -1315,13 +1315,13 @@ void rtw_update_sta_info(struct rtw_dev *rtwdev, struct rtw_sta_info *si,
  		}
  		dm_info->rrsr_val_init = RRSR_INIT_5G;
  	} else if (hal->current_band_type == RTW_BAND_2G) {
@@ -251,7 +251,7 @@ index 09a3bd9..b78094b 100644
  		if (sta->deflink.vht_cap.vht_supported) {
  #else
  		if (sta->vht_cap.vht_supported) {
-@@ -1329,7 +1329,7 @@ void rtw_update_sta_info(struct rtw_dev *rtwdev, struct rtw_sta_info *si,
+@@ -1330,7 +1330,7 @@ void rtw_update_sta_info(struct rtw_dev *rtwdev, struct rtw_sta_info *si,
  				   RA_MASK_OFDM_IN_VHT;
  			wireless_set = WIRELESS_CCK | WIRELESS_OFDM |
  				       WIRELESS_HT | WIRELESS_VHT;
@@ -260,7 +260,7 @@ index 09a3bd9..b78094b 100644
  		} else if (sta->deflink.ht_cap.ht_supported) {
  #else
  		} else if (sta->ht_cap.ht_supported) {
-@@ -1338,7 +1338,7 @@ void rtw_update_sta_info(struct rtw_dev *rtwdev, struct rtw_sta_info *si,
+@@ -1339,7 +1339,7 @@ void rtw_update_sta_info(struct rtw_dev *rtwdev, struct rtw_sta_info *si,
  				   RA_MASK_OFDM_IN_HT_2G;
  			wireless_set = WIRELESS_CCK | WIRELESS_OFDM |
  				       WIRELESS_HT;
@@ -269,7 +269,7 @@ index 09a3bd9..b78094b 100644
  		} else if (sta->deflink.supp_rates[0] <= 0xf) {
  #else
  		} else if (sta->supp_rates[0] <= 0xf) {
-@@ -1355,14 +1355,14 @@ void rtw_update_sta_info(struct rtw_dev *rtwdev, struct rtw_sta_info *si,
+@@ -1356,14 +1356,14 @@ void rtw_update_sta_info(struct rtw_dev *rtwdev, struct rtw_sta_info *si,
  		wireless_set = 0;
  	}
  
@@ -286,7 +286,7 @@ index 09a3bd9..b78094b 100644
  		is_support_sgi = sta->deflink.vht_cap.vht_supported &&
  				 (sta->deflink.vht_cap.cap & IEEE80211_VHT_CAP_SHORT_GI_80);
  #else
-@@ -1372,7 +1372,7 @@ void rtw_update_sta_info(struct rtw_dev *rtwdev, struct rtw_sta_info *si,
+@@ -1373,7 +1373,7 @@ void rtw_update_sta_info(struct rtw_dev *rtwdev, struct rtw_sta_info *si,
  		break;
  	case IEEE80211_STA_RX_BW_40:
  		bw_mode = RTW_CHANNEL_WIDTH_40;
@@ -295,7 +295,7 @@ index 09a3bd9..b78094b 100644
  		is_support_sgi = sta->deflink.ht_cap.ht_supported &&
  				 (sta->deflink.ht_cap.cap & IEEE80211_HT_CAP_SGI_40);
  #else
-@@ -1382,7 +1382,7 @@ void rtw_update_sta_info(struct rtw_dev *rtwdev, struct rtw_sta_info *si,
+@@ -1383,7 +1383,7 @@ void rtw_update_sta_info(struct rtw_dev *rtwdev, struct rtw_sta_info *si,
  		break;
  	default:
  		bw_mode = RTW_CHANNEL_WIDTH_20;
@@ -304,7 +304,7 @@ index 09a3bd9..b78094b 100644
  		is_support_sgi = sta->deflink.ht_cap.ht_supported &&
  				 (sta->deflink.ht_cap.cap & IEEE80211_HT_CAP_SGI_20);
  #else
-@@ -1392,7 +1392,7 @@ void rtw_update_sta_info(struct rtw_dev *rtwdev, struct rtw_sta_info *si,
+@@ -1393,7 +1393,7 @@ void rtw_update_sta_info(struct rtw_dev *rtwdev, struct rtw_sta_info *si,
  		break;
  	}
  
@@ -313,7 +313,7 @@ index 09a3bd9..b78094b 100644
  	if (sta->deflink.vht_cap.vht_supported ||
  	    sta->deflink.ht_cap.ht_supported)
  #else
-@@ -1415,7 +1415,7 @@ void rtw_update_sta_info(struct rtw_dev *rtwdev, struct rtw_sta_info *si,
+@@ -1416,7 +1416,7 @@ void rtw_update_sta_info(struct rtw_dev *rtwdev, struct rtw_sta_info *si,
  	si->ra_mask = ra_mask;
  	si->rate_id = rate_id;
  
@@ -322,7 +322,7 @@ index 09a3bd9..b78094b 100644
  	rtw_fw_send_ra_info(rtwdev, si, reset_ra_mask);
  #else
  	rtw_fw_send_ra_info(rtwdev, si);
-@@ -1789,7 +1789,7 @@ static void rtw_vif_smps_iter(void *data, u8 *mac,
+@@ -1790,7 +1790,7 @@ static void rtw_vif_smps_iter(void *data, u8 *mac,
  {
  	struct rtw_dev *rtwdev = (struct rtw_dev *)data;
  
@@ -331,7 +331,7 @@ index 09a3bd9..b78094b 100644
  	if (vif->type != NL80211_IFTYPE_STATION || !vif->cfg.assoc)
  #else
  	if (vif->type != NL80211_IFTYPE_STATION || !vif->bss_conf.assoc)
-@@ -1797,13 +1797,13 @@ static void rtw_vif_smps_iter(void *data, u8 *mac,
+@@ -1798,13 +1798,13 @@ static void rtw_vif_smps_iter(void *data, u8 *mac,
  		return;
  
  	if (rtwdev->hal.txrx_1ss)
@@ -347,7 +347,7 @@ index 09a3bd9..b78094b 100644
  		ieee80211_request_smps(vif, 0, IEEE80211_SMPS_OFF);
  #else
  		ieee80211_request_smps(vif, IEEE80211_SMPS_OFF);
-@@ -2620,7 +2620,7 @@ static void rtw_check_sta_active_iter(void *data, struct ieee80211_vif *vif)
+@@ -2542,7 +2542,7 @@ static void rtw_check_sta_active_iter(void *data, struct ieee80211_vif *vif)
  	if (vif->type != NL80211_IFTYPE_STATION)
  		return;
  
@@ -356,7 +356,7 @@ index 09a3bd9..b78094b 100644
  	if (vif->cfg.assoc || !is_zero_ether_addr(rtwvif->bssid))
  #else
  	if (vif->bss_conf.assoc || !is_zero_ether_addr(rtwvif->bssid))
-@@ -2671,7 +2671,7 @@ void rtw_set_ampdu_factor(struct rtw_dev *rtwdev, struct ieee80211_vif *vif,
+@@ -2593,7 +2593,7 @@ void rtw_set_ampdu_factor(struct rtw_dev *rtwdev, struct ieee80211_vif *vif,
  		return;
  	}
  
@@ -366,7 +366,7 @@ index 09a3bd9..b78094b 100644
  		factor = u32_get_bits(sta->deflink.vht_cap.cap,
  				      IEEE80211_VHT_CAP_MAX_A_MPDU_LENGTH_EXPONENT_MASK);
 diff --git a/main.h b/main.h
-index 8648c88..445c5b4 100644
+index b2369e5..d76945f 100644
 --- a/main.h
 +++ b/main.h
 @@ -36,6 +36,8 @@
@@ -379,10 +379,10 @@ index 8648c88..445c5b4 100644
  /**
   * abs_diff - return absolute value of the difference between the arguments
 diff --git a/pci.c b/pci.c
-index e6bb7a2..84ededc 100644
+index 8b0d961..ede9029 100644
 --- a/pci.c
 +++ b/pci.c
-@@ -1706,7 +1706,7 @@ static int rtw_pci_napi_init(struct rtw_dev *rtwdev)
+@@ -1708,7 +1708,7 @@ static int rtw_pci_napi_init(struct rtw_dev *rtwdev)
  #endif
  		, &rtwpci->napi
  		, rtw_pci_napi_poll
@@ -405,7 +405,7 @@ index c6360cf..1392529 100644
  		rtwdev->ps_enabled = true;
  	} else {
 diff --git a/tx.c b/tx.c
-index a56c06e..07eb7a2 100644
+index 79c27a4..a0e89be 100644
 --- a/tx.c
 +++ b/tx.c
 @@ -95,7 +95,7 @@ EXPORT_SYMBOL(rtw_tx_fill_tx_desc);
