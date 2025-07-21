@@ -26,6 +26,11 @@ jobs:
           mkdir -p sdk/package/kernel/rtw88
           rsync -av --exclude=sdk --exclude=.git --exclude=.github ./ sdk/package/kernel/rtw88/
 
+      - name: Prepare .config
+        run: |
+          cd sdk
+          make defconfig
+
       - name: Build rtw88
         run: |
           cd sdk
