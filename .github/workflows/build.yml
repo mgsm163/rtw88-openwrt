@@ -24,7 +24,7 @@ jobs:
       - name: Copy rtw88 to SDK
         run: |
           mkdir -p sdk/package/kernel/rtw88
-          cp -r ./* sdk/package/kernel/rtw88/
+          rsync -av --exclude=sdk --exclude=.git --exclude=.github ./ sdk/package/kernel/rtw88/
 
       - name: Update feeds and build
         run: |
