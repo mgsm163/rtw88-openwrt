@@ -8,18 +8,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Install dependencies
         run: |
           sudo apt update
-          sudo apt install -y build-essential git unzip wget python3 python3-setuptools libncurses5-dev zlib1g-dev gawk flex gettext libssl-dev xsltproc rsync bc
+          sudo apt install -y build-essential git unzip wget python3 python3-setuptools libncurses5-dev zlib1g-dev gawk flex gettext libssl-dev xsltproc rsync bc zstd
 
       - name: Download OpenWRT SDK
         run: |
-          wget https://downloads.openwrt.org/snapshots/targets/rockchip/armv8/openwrt-sdk-rockchip-armv8_gcc-12.3.0_musl.Linux-x86_64.tar.xz
-          tar -xf openwrt-sdk-rockchip-armv8_gcc-12.3.0_musl.Linux-x86_64.tar.xz
-          mv openwrt-sdk-rockchip-armv8_gcc-12.3.0_musl.Linux-x86_64 sdk
+          wget https://downloads.openwrt.org/snapshots/targets/rockchip/armv8/openwrt-sdk-rockchip-armv8_gcc-14.3.0_musl.Linux-x86_64.tar.zst
+          tar --use-compress-program=unzstd -xf openwrt-sdk-rockchip-armv8_gcc-14.3.0_musl.Linux-x86_64.tar.zst
+          mv openwrt-sdk-rockchip-armv8_gcc-14.3.0_musl.Linux-x86_64 sdk
 
       - name: Copy rtw88 to SDK
         run: |
