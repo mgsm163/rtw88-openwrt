@@ -1,0 +1,42 @@
+name: Build rtw88-8821cu for OpenWRT
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y build-essential git unzip wget python3 python3-setuptools libncurses5-dev zlib1g-dev gawk flex gettext libssl-dev xsltproc rsync bc
+
+      - name: Download OpenWRT SDK
+        run: |
+          wget https://downloads.openwrt.org/snapshots/targets/rockchip/armv8/openwrt-sdk-rockchip-armv8_gcc-12.3.0_musl.Linux-x86_64.tar.xz
+          tar -xf openwrt-sdk-rockchip-armv8_gcc-12.3.0_musl.Linux-x86_64.tar.xz
+          mv openwrt-sdk-rockchip-armv8_gcc-12.3.0_musl.Linux-x86_64 sdk
+
+      - name: Copy rtw88 to SDK
+        run: |
+          cp -r . sdk/package/kernel/rtw88
+
+      - name: Update feeds and build
+        run: |
+          cd sdk
+          ./scripts/feeds update -a
+          ./scripts/feeds install -a
+          make package/rtw88/compile V=s
+          make package/rtw88-usb/compile V=s
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: rtw88-ipk
+          path: |
+            sdk/bin/targets/rockchip/armv8/packages/kmod-rtw88-*.ipk
+            sdk/bin/packages/aarch64_generic/base/rtw88-firmware_*.ipk
